@@ -1,0 +1,6 @@
+# Modo productivo: MySQL por cliente (BD maestra) + ID tokens de Google
+-r requirements.txt
+PyMySQL==1.1.1
+cryptography==43.0.3
+google-auth==2.35.0
+requests==2.32.3
