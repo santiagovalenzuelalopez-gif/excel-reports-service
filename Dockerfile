@@ -18,4 +18,5 @@ COPY --chown=appuser:appuser scripts ./scripts
 RUN mkdir -p data/db && chown appuser:appuser data/db
 USER appuser
 # Con CLIENT_DB_BACKEND=master no se siembra la demo. 1 worker por instancia; timeout 0: reportes grandes no se cortan.
-CMD [ "$CLIENT_DB_BACKEND" = "master" ] || python scripts/seed_demo.py; exec gunicorn --bind :$PORT --workers 1 --worker-class uvicorn.workers.UvicornWorker --timeout 0 app.main:app
+# Forma exec envolviendo `sh -c`: el shell expande $PORT y $CLIENT_DB_BACKEND, sin la ambigüedad de un CMD que empieza por "[" y no es JSON.
+CMD ["sh", "-c", "[ \"$CLIENT_DB_BACKEND\" = master ] || python scripts/seed_demo.py; exec gunicorn --bind :$PORT --workers 1 --worker-class uvicorn.workers.UvicornWorker --timeout 0 app.main:app"]
